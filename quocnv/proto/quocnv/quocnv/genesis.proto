@@ -1,0 +1,12 @@
+syntax = "proto3";
+package quocnv.quocnv;
+
+import "gogoproto/gogo.proto";
+import "quocnv/quocnv/params.proto";
+
+option go_package = "quocnv/x/quocnv/types";
+
+// GenesisState defines the quocnv module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}

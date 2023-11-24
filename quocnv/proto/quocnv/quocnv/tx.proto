@@ -1,0 +1,7 @@
+syntax = "proto3";
+package quocnv.quocnv;
+
+option go_package = "quocnv/x/quocnv/types";
+
+// Msg defines the Msg service.
+service Msg {}
