@@ -1,0 +1,19 @@
+syntax = "proto3";
+package osmosis.{{.ModuleName}}.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "osmosis/{{.ModuleName}}/v1/genesis.proto";
+import "osmosis/{{.ModuleName}}/v1/tx.proto";
+
+option go_package = "{{.ModulePath}}/client/queryproto";
+
+service Query {
+  rpc Params(ParamsRequest) returns (ParamsResponse) {
+    option (google.api.http).get = "/osmosis/{{.ModuleName}}/v1/Params";
+  }
+}
+
+//=============================== Params
+message ParamsRequest {}
+message ParamsResponse { Params params = 1 [ (gogoproto.nullable) = false ]; }

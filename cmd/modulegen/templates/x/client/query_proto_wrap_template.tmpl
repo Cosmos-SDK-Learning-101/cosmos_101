@@ -1,0 +1,23 @@
+package client
+
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"{{.ModulePath}}"
+	"{{.ModulePath}}/client/queryproto"
+)
+
+type Querier struct {
+	K {{.ModuleName}}.Keeper
+}
+
+func NewQuerier(k {{.ModuleName}}.Keeper) Querier {
+	return Querier{k}
+}
+
+func (q Querier) Params(ctx sdk.Context,
+	req queryproto.ParamsRequest,
+) (*queryproto.ParamsResponse, error) {
+	params := q.K.GetParams(ctx)
+	return &queryproto.ParamsResponse{Params: params}, nil
+}

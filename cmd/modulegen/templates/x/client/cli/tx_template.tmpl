@@ -1,0 +1,26 @@
+package cli
+
+import (
+	flag "github.com/spf13/pflag"
+
+	"github.com/spf13/cobra"
+
+	"github.com/osmosis-labs/osmosis/osmoutils/osmocli"
+	"{{.ModulePath}}/types"
+)
+
+func NewTxCmd() *cobra.Command {
+	txCmd := osmocli.TxIndexCmd(types.ModuleName)
+
+	osmocli.AddTxCmd(txCmd, NewGeneratedCmd)
+
+	return txCmd
+}
+
+func NewGeneratedCmd() (*osmocli.TxCliDesc, *types.MsgTest) {
+	return &osmocli.TxCliDesc{
+		Use:   "generated-cmd [test]",
+		Short: "TODO: code-generated command, change this",
+		Flags: osmocli.FlagDesc{RequiredFlags: []*flag.FlagSet{FlagCodeGenerated()}},
+	}, &types.MsgTest{}
+}
