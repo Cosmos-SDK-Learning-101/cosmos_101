@@ -1,7 +1,0 @@
-syntax = "proto3";
-package duonghb.duonghb;
-
-option go_package = "duonghb/x/duonghb/types";
-
-// Msg defines the Msg service.
-service Msg {}
