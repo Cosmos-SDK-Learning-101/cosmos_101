@@ -1,0 +1,7 @@
+syntax = "proto3";
+package helloworl.helloworl;
+
+option go_package = "helloworl/x/helloworl/types";
+
+// Msg defines the Msg service.
+service Msg {}

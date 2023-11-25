@@ -1,0 +1,12 @@
+syntax = "proto3";
+package helloworl.helloworl;
+
+import "gogoproto/gogo.proto";
+import "helloworl/helloworl/params.proto";
+
+option go_package = "helloworl/x/helloworl/types";
+
+// GenesisState defines the helloworl module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
