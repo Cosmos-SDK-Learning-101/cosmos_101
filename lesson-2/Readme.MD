@@ -5,13 +5,27 @@
 
 ### Creating a new blockchain
 
+Building the blockchain
+
+```sh
+make build
+```
+
+Init chain
+
+````sh
+./build/simd init demo \
+    --home ./private/.simapp \
+    --chain-id learning-chain-1
+```
+
 Create alice account
 
 ```sh
 ./build/simd keys add alice \
     --keyring-backend test \
     --home ./private/.simapp
-```
+````
 
 Check alice account
 
@@ -31,17 +45,18 @@ Prefund for alice account
 
 Check balances
 
-````sh
+```sh
 grep -A 10 balances ./private/.simapp/config/genesis.json
-``
+```
 
 Create first Validator and stake
+
 ```sh
 ./build/simd genesis gentx alice 70000000stake \
     --home ./private/.simapp \
     --keyring-backend test \
     --chain-id learning-chain-1
-````
+```
 
 Collect genesis data
 
@@ -54,12 +69,6 @@ Validate Genesis
 
 ```sh
  ./build/simd genesis validate-genesis --home ./private/.simapp
-```
-
-Building the blockchain
-
-```sh
-make build
 ```
 
 ## Starting a blockchain node
