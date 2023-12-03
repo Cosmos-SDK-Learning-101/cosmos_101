@@ -1,53 +1,50 @@
-# This workflow is useful if you want to automate the process of:
-#
-# a) Creating a new prelease when you push a new tag with a "v" prefix (version).
-#
-#    This type of prerelease is meant to be used for production: alpha, beta, rc, etc. types of releases.
-#    After the prerelease is created, you need to make your changes on the release page at the relevant
-#    Github page and publish your release.
-#
-# b) Creating/updating the "latest" prerelease when you push to your default branch.
-#
-#    This type of prelease is useful to make your bleeding-edge binaries available to advanced users.
-#
-# The workflow will not run if there is no tag pushed with a "v" prefix and no change pushed to your 
-# default branch.
-on: push
+name: Release
+# This workflow helps with creating releases.
+# This job will only be triggered when a tag (vX.X.x) is pushed
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+" # Push events to matching v*, i.e. v1.0, v20.15.10
+
+permissions:
+  contents: read
 
 jobs:
-  might_release:
+  release:
+    permissions:
+      contents: write # for goreleaser/goreleaser-action to create a GitHub release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v3
         with:
-          fetch-depth: 0
-        
-      - name: Prepare Release Variables 
-        id: vars
-        uses: ignite/cli/actions/release/vars@main
-
-      - name: Issue Release Assets 
-        uses: ignite/cli/actions/cli@main
-        if: ${{ steps.vars.outputs.should_release == 'true' }}
+          go-version: 1.19.7
+      - name: Unshallow
+        run: git fetch --prune --unshallow
+      - name: Create release
+        uses: goreleaser/goreleaser-action@v3
         with:
-          args: chain build --release --release.prefix ${{ steps.vars.outputs.tarball_prefix }} -t linux:amd64 -t darwin:amd64 -t darwin:arm64
-
-      - name: Delete the "latest" Release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        if: ${{ steps.vars.outputs.is_release_type_latest == 'true' }}
-        with:
-          tag_name: ${{ steps.vars.outputs.tag_name }}
-          delete_release: true
+          args: release --rm-dist --release-notes ./RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish the Release
-        uses: softprops/action-gh-release@v1
-        if: ${{ steps.vars.outputs.should_release == 'true' }}
-        with:
-          tag_name: ${{ steps.vars.outputs.tag_name }}
-          files: release/*
-          prerelease: true 
+  release-success:
+    needs: release
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack on success
+        uses: rtCamp/action-slack-notify@v2.2.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: cosmos-tech
+          SLACK_USERNAME: Cosmos SDK Release Bot
+          SLACK_ICON: https://avatars.githubusercontent.com/t/5997665?size=64
+          SLACK_COLOR: good
+          SLACK_TITLE: "Cosmos SDK ${{ github.ref_name }} is tagged :tada:"
+          SLACK_MESSAGE: "@channel :point_right: https://github.com/cosmos/cosmos-sdk/releases/tag/${{ github.ref_name }}"
+          SLACK_FOOTER: ""
+          SLACK_LINK_NAMES: true
+          MSG_MINIMAL: true
