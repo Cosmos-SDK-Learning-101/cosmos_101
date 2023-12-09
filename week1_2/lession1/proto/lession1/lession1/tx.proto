@@ -1,7 +1,0 @@
-syntax = "proto3";
-package lession1.lession1;
-
-option go_package = "lession1/x/lession1/types";
-
-// Msg defines the Msg service.
-service Msg {}
