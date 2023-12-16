@@ -1,0 +1,80 @@
+start chain 
+./build/simd start \
+    --home ./private/.simapp
+
+query balance
+
+./build/simd q bank balances  cosmos18l3rax4z8ee3u5e9jh45jqagnsep085zneyu28
+
+./build/simd query bank balances $alice
+
+
+
+
+./build/simd config chain-id demo
+
+./build/simd config keyring-backend test
+
+
+./build/simd keys add alice
+model truly void fade antenna jeans ladder true render occur axis wrap comfort aspect wish hello secret movie oxygen space blame arch ride twenty
+
+export ALICE=cosmos1x2g38xczfv5hgrvmevaulhmpjrc376ent8dx9z
+
+
+./build/simd keys add bob
+settle virus laugh mail denial siren when chaos solid immense stick shadow destroy polar room park regret lazy quote raccoon relax thought twin menu
+export BOB=cosmos1p4s33l7ktxpjz2nx82zc5e6rjs2ncxr750n97t
+
+
+init test --chain-id demo
+
+cd ~/.simapp/config/ 
+change period proposal 
+
+./build/simd add-genesis-account alice 5000000000stake --keyring-backend test
+./build/simd add-genesis-account bob 5000000000stake --keyring-backend test
+./build/simd gentx alice 1000000stake --chain-id demo
+./build/simd collect-gentxs
+
+
+start chain 
+./build/simd start
+
+create draft proposal 
+./build/simd tx gov draft-proposal
+
+
+Submit the proposal on chain from alice:
+./build/simd tx gov submit-proposal draft_proposal.json --from alice --keyring-backend test
+
+
+query propoal 
+./build/simd query tx FE7EF4EEC91D47C404A41D86A31EADFF99946C9E9FAF58777EC50AFFD11AE3CF
+
+
+
+./build/simd query gov proposal 1
+
+
+./build/simd query gov params --output json | jq .deposit_params.min_deposit
+
+
+deposit to active pp
+./build/simd tx gov deposit 1 9999990stake --from bob --keyring-backend test
+
+./build/simd query gov proposal 1 --output json
+
+
+vote: 
+./build/simd tx gov vote 1 yes --from alice --keyring-backend test
+./build/simd tx gov vote 1 yes --from bob --keyring-backend test
+
+
+view 
+./build/simd query gov proposal 1 --output json | jq .status
+
+
+check 
+./build/simd query staking delegations $ALICE
+./build/simd query staking delegations $BOB
