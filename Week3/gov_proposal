@@ -1,0 +1,116 @@
+export PATH=$PATH:$(go env GOPATH)/bin
+start chain 
+simd start \
+    --home ./private/.simapp
+
+query balance
+
+simd q bank balances  cosmos18l3rax4z8ee3u5e9jh45jqagnsep085zneyu28
+
+simd query bank balances $alice
+
+
+
+
+simd config chain-id demo
+
+simd config keyring-backend test
+
+
+simd keys add alice
+- name: alice
+  type: local
+  address: cosmos10zp9vfsmlhh5zpqsnjmjc6qmle3txa6jcnln6j
+  pubkey: '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"A1maYMRA4ONCjDjyner0eClJ1KeTISMZ7/ItMg759pHm"}'
+  mnemonic: ""
+
+
+**Important** write this mnemonic phrase in a safe place.
+It is the only way to recover your account if you ever forget your password.
+
+alley minimum decide dutch milk catch seminar suggest reward wave now whip trust secret notice dash knee broom code sentence light offer rotate once
+export ALICE=cosmos10zp9vfsmlhh5zpqsnjmjc6qmle3txa6jcnln6j
+
+export alice=$(simd keys show alice --address \
+    --home ./private/.simapp \
+    --keyring-backend test)
+
+
+simd keys add bob
+- name: bob
+  type: local
+  address: cosmos1yjxwaq83t9p2zqy4tu89z467cq92drmxmfe8nz
+  pubkey: '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AmsTicdJ+036eI1W/M/60TPMZ1sDpKeFlF+zDLJPULBo"}'
+  mnemonic: ""
+
+
+**Important** write this mnemonic phrase in a safe place.
+It is the only way to recover your account if you ever forget your password.
+
+chimney gallery blame session cable afford genius repeat wife still chaos ginger bulk tilt point quarter shoulder depend sphere post warfare web grocery gun
+export BOB=cosmos1dqvlpjtflqemqp3906hqqgez7kfhf2upechcrf
+export bob=$(simd keys show bob --address \
+    --home ./private/.simapp \
+    --keyring-backend test)
+
+init test --chain-id demo
+
+cd ~/.simapp/config/ 
+change period proposal 
+
+simd add-genesis-account alice 5000000000stake --keyring-backend test
+
+
+simd add-genesis-account alice 5000000000stake --keyring-backend test
+simd add-genesis-account bob 5000000000stake --keyring-backend test
+simd gentx alice 1000000stake --chain-id demo
+simd collect-gentxs
+
+simd collect-gentxs \
+    --home ./private/.simapp
+
+
+
+start chain 
+simd start
+
+create draft proposal 
+simd tx gov draft-proposal
+
+simd tx gov draft-proposal \
+    --home ./private/.simapp
+
+Submit the proposal on chain from alice:
+simd tx gov submit-proposal draft_proposal.json --from alice --keyring-backend test
+
+
+query propoal c
+simd query tx FE7EF4EEC91D47C404A41D86A31EADFF99946C9E9FAF58777EC50AFFD11AE3CF
+
+simd query tx FA27303F91894C81BE97814FB183B1CE2458E6A36967B4C55EB0B8B3464024C3
+
+
+simd query gov proposal 1
+
+
+simd query gov params --output json | jq .deposit_params.min_deposit
+
+
+deposit to active pp
+simd tx gov deposit 1 9999990stake --from bob --keyring-backend test
+
+simd query gov proposal 1 --output json
+
+
+vote: 
+simd tx gov vote 1 yes --from alice --keyring-backend test
+simd tx gov vote 1 yes --from bob --keyring-backend test
+
+
+view 
+simd query gov proposal 1 --output json | jq .status
+
+
+check 
+simd query staking delegations $ALICE
+simd query staking delegations $BOB
